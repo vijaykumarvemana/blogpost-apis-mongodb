@@ -1,11 +1,18 @@
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
+import blogsRouter from './services/index.js'
 import listEndpoints from 'express-list-endpoints'
 
 
 const server = express()
 const port = process.env.PORT || 3001
+
+server.use(cors())
+server.use(express.json())
+
+
+server.use("/blogPosts", blogsRouter)
 
 
 mongoose.connect(process.env.MDB_CONNECTION)
