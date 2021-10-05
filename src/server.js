@@ -3,6 +3,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import blogsRouter from './services/index.js'
 import listEndpoints from 'express-list-endpoints'
+import { notFoundHandler, badRequestHandler, genericErrorHandler } from './errorhandlers.js'
 
 
 const server = express()
@@ -15,11 +16,17 @@ server.use(express.json())
 server.use("/blogPosts", blogsRouter)
 
 
+server.use(notFoundHandler)
+server.use(badRequestHandler)
+server.use(genericErrorHandler)
+
+
 mongoose.connect(process.env.MDB_CONNECTION)
 
 mongoose.connection.on("connected", () => {
     console.log("Successfully connected to mongoDB")
     server.listen(port, () => {
+        console.table(listEndpoints(server))
         console.log("Server running on port:", port)
     })
 })
