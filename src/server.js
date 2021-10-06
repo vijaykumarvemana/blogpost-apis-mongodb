@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import blogsRouter from './services/index.js'
+import reviewRouter  from './services/reviews/index.js'
 import listEndpoints from 'express-list-endpoints'
 import { notFoundHandler, badRequestHandler, genericErrorHandler } from './errorhandlers.js'
 
@@ -14,6 +15,7 @@ server.use(express.json())
 
 
 server.use("/blogPosts", blogsRouter)
+server.use("/reviews", reviewRouter)
 
 
 server.use(notFoundHandler)
