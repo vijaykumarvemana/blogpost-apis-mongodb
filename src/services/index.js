@@ -3,16 +3,23 @@ import createHttpError from 'http-errors'
 import BlogPostModel from  '../services/schema.js'
 import ReviewModel from '../services/reviews/schema.js'
 
+import q2m from 'query-to-mongo'
+
 
 const blogsRouter = express.Router()
 
 
 blogsRouter.get("/", async(req, res , next) => {
     try {
-        const blogPosts = await BlogPostModel.find()
-        res.send(blogPosts)
+        const query = q2m(req.query)
+        const total = await BlogPostModel.countDocuments(query.criteria)
+        const blogPosts = await BlogPostModel.find(query.criteria, query.options.fields)
+        .limit(query.options.limit)
+        .skip(query.options.skip)
+        .sort(query.options.sort)
+        res.send({links: query.links("/blogPosts", total), total, pageTotal: Math.ceil(total / query.options.limit), blogPosts})
     } catch (error) {
-      next(error)  
+      next(error)
     }
 })
 
