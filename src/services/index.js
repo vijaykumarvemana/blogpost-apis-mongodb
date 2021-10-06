@@ -64,7 +64,7 @@ blogsRouter.delete("/:blogID", async(req, res , next) => {
         const deletedBlog = await BlogPostModel.findByIdAndDelete(blogId)
         
         if(deletedBlog){
-          res.status.apply(204).send()
+          res.status(204).send()
         }else{
             next(createHttpError(404, `blodpost with id ${blogId} not found!`))
         }
